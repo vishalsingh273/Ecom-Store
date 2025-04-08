@@ -100,6 +100,8 @@ class Customer(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+
 
 class Review(models.Model):
     product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)

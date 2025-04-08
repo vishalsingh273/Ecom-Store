@@ -8,23 +8,44 @@ from .forms import *
 from .models import Banner, Category, Product
 from django.shortcuts import render
 from .models import Banner, Category, Product, HomePageSection
+from django.db import IntegrityError, transaction
+from django.core.paginator import Paginator
+
+
+# def home(request):
+#     featured_banners = Banner.objects.filter(is_active=True)[:5]
+#     active_sections = HomePageSection.objects.filter(is_active=True).order_by('order')
+#     featured_products = Product.objects.filter(available=True)[:8]
+#     featured_categories = Category.objects.all()[:4]
+#     all_categories = Category.objects.all() 
+
+#     context = {
+#         'featured_banners': featured_banners,
+#         'sections': active_sections,
+#         'products': featured_products,
+#         'featured_categories': featured_categories,
+#         'categories': all_categories, 
+#     }
+#     return render(request, 'store/home.html', context)
 
 def home(request):
     featured_banners = Banner.objects.filter(is_active=True)[:5]
     active_sections = HomePageSection.objects.filter(is_active=True).order_by('order')
-    featured_products = Product.objects.filter(available=True)[:8]
+    product_list = Product.objects.filter(available=True).order_by('-created')
+    paginator = Paginator(product_list, 20)
+    page_number = request.GET.get('page')
+    products = paginator.get_page(page_number)
     featured_categories = Category.objects.all()[:4]
-    all_categories = Category.objects.all()  # ✅ Add this line
+    all_categories = Category.objects.all()
 
     context = {
         'featured_banners': featured_banners,
         'sections': active_sections,
-        'products': featured_products,
+        'products': products,
         'featured_categories': featured_categories,
-        'categories': all_categories,  # ✅ Pass to template
+        'categories': all_categories,
     }
     return render(request, 'store/home.html', context)
-
 
 # def home(request):
 #     # Get active banners (existing functionality)
@@ -161,30 +182,63 @@ def register(request):
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
         customer_form = CustomerForm(request.POST)
-        
+
         if user_form.is_valid() and customer_form.is_valid():
-            # Create User
-            user = user_form.save()
-            
-            # Create and link Customer - THIS IS THE CRITICAL FIX
-            customer = customer_form.save(commit=False)
-            customer.user = user  # Link to the new user
-            customer.email = user.email  # Optional: sync email
-            customer.save()  # This creates the Customer record
-            
-            # Login and redirect
-            login(request, user)
-            messages.success(request, f'Welcome, {user.username}!')
-            return redirect('home')
+            try:
+                user = user_form.save()
+
+                # Remove any orphaned customer objects for safety
+                Customer.objects.filter(user=user).delete()
+                Customer.objects.filter(user__isnull=True).delete()
+
+                customer = customer_form.save(commit=False)
+                customer.user = user
+                customer.save()
+
+                login(request, user)
+                messages.success(request, f"Welcome {user.username}! You have registered successfully.")
+                return redirect('home')
+            except IntegrityError:
+                messages.error(request, "An account with these details already exists.")
+        else:
+            messages.error(request, "Please fix the errors below.")
     else:
         user_form = UserCreationForm()
         customer_form = CustomerForm()
-    
-    context = {
+
+    return render(request, 'store/register.html', {
         'user_form': user_form,
         'customer_form': customer_form,
-    }
-    return render(request, 'store/register.html', context)
+    })
+
+# def register(request):
+#     if request.method == 'POST':
+#         user_form = UserCreationForm(request.POST)
+#         customer_form = CustomerForm(request.POST)
+        
+#         if user_form.is_valid() and customer_form.is_valid():
+#             # Create User
+#             user = user_form.save()
+            
+#             # Create and link Customer - THIS IS THE CRITICAL FIX
+#             customer = customer_form.save(commit=False)
+#             customer.user = user  # Link to the new user
+#             customer.email = user.email  # Optional: sync email
+#             customer.save()  # This creates the Customer record
+            
+#             # Login and redirect
+#             login(request, user)
+#             messages.success(request, f'Welcome, {user.username}!')
+#             return redirect('home')
+#     else:
+#         user_form = UserCreationForm()
+#         customer_form = CustomerForm()
+    
+#     context = {
+#         'user_form': user_form,
+#         'customer_form': customer_form,
+#     }
+#     return render(request, 'store/register.html', context)
 
 
 def login_view(request):

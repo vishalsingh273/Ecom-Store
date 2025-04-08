@@ -1,23 +1,21 @@
- {% extends 'store/base.html' %}
+{% extends 'store/base.html' %}
 {% load static %}
 
-
 {% block content %}
+
+<!-- Banner Slider -->
 <div class="banner-slider mb-4" style="height: 400px; overflow: hidden;">
     <div id="bannerCarousel" class="carousel slide h-100" data-bs-ride="carousel">
         <div class="carousel-inner h-100">
             {% for banner in featured_banners %}
             <div class="carousel-item h-100 {% if forloop.first %}active{% endif %}">
                 <a href="{{ banner.link_url }}">
-                    <img src="{{ banner.image.url }}"
-                         class="d-block w-100 h-100"
-                         alt="{{ banner.title }}"
+                    <img src="{{ banner.image.url }}" class="d-block w-100 h-100" alt="{{ banner.title }}"
                          style="object-fit: cover; object-position: center;">
                 </a>
             </div>
             {% endfor %}
         </div>
-        <!-- Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
@@ -29,11 +27,11 @@
     </div>
 </div>
 
-<!-- Featured Categories -->
+<!-- Featured Categories (commented out) -->
+{% comment %}
 <div class="featured-categories mb-5 py-5" style="background-color: #000;">
     <div class="row justify-content-center">
-            {% for category in featured_categories %}
-    
+        {% for category in featured_categories %}
         <div class="col-md-2 col-4 mb-4 text-center">
             <a href="{% url 'category_products' category.slug %}" style="text-decoration: none;">
                 <div class="mb-2">
@@ -45,7 +43,46 @@
         {% endfor %}
     </div>
 </div>
+{% endcomment %}
 
+<!-- Featured Products -->
+<div class="featured-products mb-5">
+    <h2 class="section-title text-center">Featured Products</h2>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 col-6 mb-3">
+            {% include 'store/product_cart.html' %}
+        </div>
+        {% empty %}
+        <p class="text-center">No products available.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    {% if products.paginator.num_pages > 1 %}
+    <div class="pagination justify-content-center mt-4">
+        <ul class="pagination">
+            {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for num in products.paginator.page_range %}
+            <li class="page-item {% if products.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
 
 <!-- Dynamic Sections -->
 {% for section in sections %}
@@ -150,15 +187,4 @@
 </div>
 {% endfor %}
 
-<!-- Featured Products -->
-<div class="featured-products mb-5">
-    <h2 class="section-title text-center">Featured Products</h2>
-    <div class="row">
-        {% for product in products %}
-        <div class="col-md-3 col-6 mb-3">
-            {% include 'store/product_cart.html' %}
-        </div>
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}

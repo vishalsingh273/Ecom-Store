@@ -712,3 +712,10 @@ main {
     transform: translateY(-5px);
     background-color: #2a2a2a;
 }
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+}
+.pagination .page-link {
+    color: #007bff;
+}

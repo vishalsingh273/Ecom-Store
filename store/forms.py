@@ -6,18 +6,21 @@ from django import forms
 from .models import Product, Category
 
 
-class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
-    
+class UserRegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+
 
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ['phone', 'address', 'city', 'state', 'zip_code', 'country']
-
+        
+        
+        
 class ShippingAddressForm(forms.ModelForm):
     class Meta:
         model = ShippingAddress

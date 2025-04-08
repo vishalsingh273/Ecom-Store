@@ -1,6 +1,55 @@
 {% extends 'store/base.html' %}
-{% block title %}Customer Service{% endblock %}
+
 {% block content %}
-<h2>Customer Service</h2>
-<p>How can we help you?</p>
+<div class="container py-5">
+  <h2 class="text-center mb-4">Customer Service</h2>
+
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <h4>Frequently Asked Questions</h4>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <strong>Q:</strong> How can I track my order?<br>
+          <strong>A:</strong> Visit your <a href="#">account dashboard</a> to track orders.
+        </li>
+        <li class="list-group-item">
+          <strong>Q:</strong> How do I return a product?<br>
+          <strong>A:</strong> Use the return request option in your order history.
+        </li>
+        <li class="list-group-item">
+          <strong>Q:</strong> Can I change my shipping address?<br>
+          <strong>A:</strong> Yes, before the product is shipped. Contact support.
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-md-6">
+      <h4>Contact Us</h4>
+      <p><strong>Email:</strong> support@example.com</p>
+      <p><strong>Phone:</strong> +91-9876543210</p>
+      <p><strong>Working Hours:</strong> Mon - Sat, 9:00 AM - 6:00 PM</p>
+
+      <h5 class="mt-4">Send us a message:</h5>
+      <form method="post" action="#">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" name="name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea class="form-control" name="message" rows="4" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
