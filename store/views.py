@@ -9,25 +9,41 @@ from .models import Banner, Category, Product
 from django.shortcuts import render
 from .models import Banner, Category, Product, HomePageSection
 
-
 def home(request):
-    # Get active banners (existing functionality)
     featured_banners = Banner.objects.filter(is_active=True)[:5]
-    
-    # Get active home page sections (new functionality)
     active_sections = HomePageSection.objects.filter(is_active=True).order_by('order')
-    
-    # Get featured products and categories (existing functionality)
     featured_products = Product.objects.filter(available=True)[:8]
     featured_categories = Category.objects.all()[:4]
-    
+    all_categories = Category.objects.all()  # ✅ Add this line
+
     context = {
-        'featured_banners': featured_banners,  # Keep banners
-        'sections': active_sections,  # Add dynamic sections
-        'products': featured_products,  # Keep featured products
-        'featured_categories': featured_categories,  # Keep featured categories
+        'featured_banners': featured_banners,
+        'sections': active_sections,
+        'products': featured_products,
+        'featured_categories': featured_categories,
+        'categories': all_categories,  # ✅ Pass to template
     }
     return render(request, 'store/home.html', context)
+
+
+# def home(request):
+#     # Get active banners (existing functionality)
+#     featured_banners = Banner.objects.filter(is_active=True)[:5]
+    
+#     # Get active home page sections (new functionality)
+#     active_sections = HomePageSection.objects.filter(is_active=True).order_by('order')
+    
+#     # Get featured products and categories (existing functionality)
+#     featured_products = Product.objects.filter(available=True)[:8]
+#     featured_categories = Category.objects.all()[:4]
+    
+#     context = {
+#         'featured_banners': featured_banners,  # Keep banners
+#         'sections': active_sections,  # Add dynamic sections
+#         'products': featured_products,  # Keep featured products
+#         'featured_categories': featured_categories,  # Keep featured categories
+#     }
+#     return render(request, 'store/home.html', context)
 
 
 
@@ -188,21 +204,7 @@ def login_view(request):
             })
     
     return render(request, 'store/login.html')
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         user = authenticate(request, username=username, password=password)
-        
-#         if user is not None:
-#             login(request, user)
-#             messages.success(request, f'Welcome back, {username}!')
-#             next_url = request.GET.get('next', 'home')
-#             return redirect(next_url)
-#         else:
-#             messages.error(request, 'Invalid username or password.')
-    
-#     return render(request, 'store/login.html')
+
 
 def logout_view(request):
     logout(request)
@@ -243,34 +245,32 @@ def category_products(request, category_slug):
         'category': category,
         'products': products
     })
-
-
-# def category_products(request, slug):
-#     category = get_object_or_404(Category, slug=slug)
-#     products = Product.objects.filter(category=category, available=True)
     
-#     context = {
-#         'category': category,
-#         'products': products
-#     }
-#     return render(request, 'store/category.html', context)
+def category_list(request):
+    return {'categories': Category.objects.all()}
+
+
 
 def search(request):
     query = request.GET.get('query', '')
+    category_slug = request.GET.get('category', '')
+
+    products = Product.objects.all()
+
     if query:
-        products = Product.objects.filter(
-            Q(name__icontains=query) | 
-            Q(description__icontains=query) |
-            Q(category__name__icontains=query)
-        ).distinct()
-    else:
-        products = Product.objects.none()
-    
+        products = products.filter(name__icontains=query)
+
+    if category_slug:
+        products = products.filter(category__slug=category_slug)
+
     context = {
         'query': query,
-        'products': products
+        'category_slug': category_slug,
+        'products': products,
+        'categories': Category.objects.all()
     }
     return render(request, 'store/search.html', context)
+
 
 @login_required
 def wishlist(request):
@@ -280,12 +280,14 @@ def wishlist(request):
     }
     return render(request, 'store/wishlist.html', context)
 
+
 @login_required
 def add_to_wishlist(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     Wishlist.objects.get_or_create(user=request.user, product=product)
     messages.success(request, f"{product.name} added to your wishlist.")
     return redirect(request.META.get('HTTP_REFERER', 'home'))
+
 
 @login_required
 def remove_from_wishlist(request, item_id):
@@ -294,8 +296,10 @@ def remove_from_wishlist(request, item_id):
     messages.success(request, "Item removed from your wishlist.")
     return redirect('wishlist')
 
+
 def about(request):
     return render(request, 'store/about.html')
+
 
 def contact(request):
     if request.method == 'POST':
@@ -314,3 +318,19 @@ def orders_view(request):
         'orders': orders
     }
     return render(request, 'store/orders.html', context)
+
+
+def todays_deals(request):
+    return render(request, 'store/todays_deals.html')
+
+def customer_service(request):
+    return render(request, 'store/customer_service.html')
+
+def registry(request):
+    return render(request, 'store/registry.html')
+
+def gift_cards(request):
+    return render(request, 'store/gift_cards.html')
+
+def sell(request):
+    return render(request, 'store/sell.html')

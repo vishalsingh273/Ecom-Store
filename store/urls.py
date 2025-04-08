@@ -13,7 +13,7 @@ urlpatterns = [
     # Product URLs
     path('product/<int:id>/<slug:slug>/', views.product_detail, name='product_detail'),
     path('category/<slug:category_slug>/', views.category_products, name='category_products'),
-    
+
     # Cart URLs
     path('cart/', views.cart, name='cart'),
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
@@ -35,5 +35,11 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
     path('orders/', orders_view, name='orders'),
+    
+    path('deals/', views.todays_deals, name='todays_deals'),
+    path('customer-service/', views.customer_service, name='customer_service'),
+    path('registry/', views.registry, name='registry'),
+    path('gift-cards/', views.gift_cards, name='gift_cards'),
+    path('sell/', views.sell, name='sell'),
 
 ]

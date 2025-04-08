@@ -30,23 +30,22 @@
 </div>
 
 <!-- Featured Categories -->
-<div class="featured-categories mb-5">
-    <h2 class="section-title text-center">Shop by Category</h2>
-    <div class="row">
-        {% for category in featured_categories %}
-        <div class="col-md-3 col-6 mb-3">
-            <div class="category-card text-center">
-                <a href="{% url 'category_products' category.slug %}">
-                    <div class="category-image-placeholder mb-2">
-                        <i class="fas fa-box-open fa-3x"></i>
-                    </div>
-                    <h5>{{ category.name }}</h5>
-                </a>
-            </div>
+<div class="featured-categories mb-5 py-5" style="background-color: #000;">
+    <div class="row justify-content-center">
+            {% for category in featured_categories %}
+    
+        <div class="col-md-2 col-4 mb-4 text-center">
+            <a href="{% url 'category_products' category.slug %}" style="text-decoration: none;">
+                <div class="mb-2">
+                    <i class="fas fa-box-open fa-3x text-white"></i>
+                </div>
+                <h6 class="text-white">{{ category.name }}</h6>
+            </a>
         </div>
         {% endfor %}
     </div>
 </div>
+
 
 <!-- Dynamic Sections -->
 {% for section in sections %}

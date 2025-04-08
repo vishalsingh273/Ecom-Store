@@ -21,3 +21,13 @@ def wishlist_counter(request):
     if request.user.is_authenticated:
         count = Wishlist.objects.filter(user=request.user).count()
     return {'wishlist_count': count}
+
+
+
+def categories_processor(request):
+    categories = Category.objects.all()
+    return {'categories': categories}
+
+
+def category_list(request):
+    return {'categories': Category.objects.all()}
