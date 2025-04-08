@@ -1,0 +1,16 @@
+{% extends "admin/change_form.html" %}
+
+{% block field_sets %}
+    {% for fieldset in adminform %}
+        {% include "admin/includes/fieldset.html" %}
+    {% endfor %}
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categorySelect = document.querySelector('#id_category');
+        if (categorySelect) {
+            categorySelect.classList.add('form-select');
+        }
+    });
+    </script>
+{% endblock %}

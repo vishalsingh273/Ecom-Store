@@ -1,0 +1,108 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Account Sidebar -->
+            <div class="card mb-4">
+                <div class="card-header bg-amazon-primary text-white">
+                    <h5>Your Account</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item active">Orders</li>
+                    <li class="list-group-item">Your Profile</li>
+                    <li class="list-group-item">Payment Options</li>
+                    <li class="list-group-item">Address Book</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <!-- Main Content -->
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h4><i class="bi bi-box-seam me-2"></i>Your Orders</h4>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary btn-sm active">Orders</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm">Buy Again</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm">Not Yet Shipped</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm">Cancelled Orders</button>
+                        </div>
+                        <small class="text-muted">{{ orders|length }} orders placed in last 6 months</small>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    {% if orders %}
+                    <div class="list-group">
+                        {% for order in orders %}
+                        <div class="list-group-item mb-3 border rounded">
+                            <div class="d-flex justify-content-between mb-2">
+                                <div>
+                                    <strong>Order Placed:</strong> {{ order.date_ordered|date:"F j, Y" }}
+                                </div>
+                                <div>
+                                    <strong>Total:</strong> ${{ order.get_cart_total }}
+                                </div>
+                                <div>
+                                    <strong>Order #:</strong> {{ order.id }}
+                                </div>
+                            </div>
+                            
+                            <div class="border-top pt-3">
+                                <h6>Status: 
+                                    <span class="badge 
+                                        {% if order.status == 'Delivered' %}bg-success
+                                        {% elif order.status == 'Shipped' %}bg-primary
+                                        {% elif order.status == 'Cancelled' %}bg-danger
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ order.status }}
+                                    </span>
+                                </h6>
+                                
+                                <div class="row mt-3">
+                                    {% for item in order.orderitem_set.all %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="d-flex">
+                                            <img src="{{ item.product.image.url }}" 
+                                                 class="img-thumbnail me-3" 
+                                                 style="width: 80px; height: 80px; object-fit: contain;" 
+                                                 alt="{{ item.product.name }}">
+                                            <div>
+                                                <h6 class="mb-1">{{ item.product.name }}</h6>
+                                                <small class="text-muted">Qty: {{ item.quantity }}</small><br>
+                                                <small>${{ item.product.price }} each</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="d-flex justify-content-end mt-2">
+                                    <a href="#" class="btn btn-outline-secondary btn-sm me-2">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i>Order Details
+                                    </a>
+                                    <a href="#" class="btn btn-amazon-warning btn-sm">
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i>Buy It Again
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-box-seam display-4 text-muted mb-3"></i>
+                        <h3>You haven't placed any orders yet</h3>
+                        <p class="text-muted">When you place an order, it will appear here</p>
+                        <a href="{% url 'home' %}" class="btn btn-amazon-warning mt-3">Start Shopping</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

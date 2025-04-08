@@ -1,0 +1,60 @@
+/* Mobile Devices */
+@media (max-width: 767px) {
+    .amazon-navbar {
+        height: auto;
+        padding: 10px 0;
+    }
+    
+    .amazon-logo {
+        margin-bottom: 10px;
+    }
+    
+    .search-bar {
+        margin: 10px 0;
+        order: 3;
+        width: 100%;
+    }
+    
+    .navbar-right {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width: 100%;
+    }
+    
+    .nav-item {
+        padding: 5px !important;
+    }
+    
+    .secondary-navbar {
+        height: auto;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .secondary-navbar .nav {
+        display: inline-flex;
+    }
+    
+    .product-card {
+        margin-bottom: 20px;
+    }
+    
+    .footer-middle .col-md-3 {
+        margin-bottom: 20px;
+    }
+}
+
+/* Tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+    .search-bar {
+        margin: 0 5px;
+    }
+    
+    .navbar-right .nav-item {
+        padding: 5px;
+    }
+    
+    .cart-text {
+        display: none;
+    }
+}

@@ -1,0 +1,60 @@
+{% extends 'store/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-amazon-primary text-white">
+                    <h4 class="my-2"><i class="bi bi-lock me-2"></i>Sign In</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Email Field -->
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Email or mobile phone number</label>
+                            <input type="text" name="username" class="form-control" id="id_username" required>
+                        </div>
+                        
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" id="id_password" required>
+                            <div class="form-text">
+                                <a href="#" class="text-amazon-link">Forgot your password?</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-amazon-warning w-100 py-2 mb-3">
+                            Sign In
+                        </button>
+                        
+                        <!-- Terms Notice -->
+                        <div class="form-text mb-3">
+                            By continuing, you agree to Amazon's 
+                            <a href="#" class="text-amazon-link">Conditions of Use</a> and 
+                            <a href="#" class="text-amazon-link">Privacy Notice</a>.
+                        </div>
+                        
+                        <!-- Divider -->
+                        <div class="d-flex align-items-center mb-3">
+                            <hr class="flex-grow-1">
+                            <span class="px-2 text-muted">New to Amazon?</span>
+                            <hr class="flex-grow-1">
+                        </div>
+                        
+                        <!-- Create Account Button -->
+                        <a href="{% url 'register' %}" class="btn btn-outline-amazon-secondary w-100">
+                            Create your Amazon account
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

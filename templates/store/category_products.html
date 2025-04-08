@@ -1,0 +1,18 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">{{ category.name }}</h2>
+    <div class="row">
+        {% if products %}
+            {% for product in products %}
+                <div class="col-md-3 col-6 mb-3">
+                    {% include 'store/product_cart.html' %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">No products found in this category.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
