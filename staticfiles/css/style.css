@@ -18,29 +18,101 @@ body {
     margin: 0;
     padding: 0;
 }
+/* Amazon Color Scheme */
+:root {
+    --amazon-primary: #131921;
+    --amazon-secondary: #232f3e;
+    --amazon-yellow: #febd69;
+    --amazon-orange: #f3a847;
+    --amazon-dark-orange: #e47911;
+    --amazon-light-gray: #e6e6e6;
+    --amazon-dark-gray: #555;
+    --amazon-blue: #0066c0;
+    --amazon-white: #ffffff;
+    --amazon-light-text: #cccccc;
+}
 
-/* Navbar Styles */
+/* Add these new rules to your existing CSS */
+/* Navbar Text Colors Only */
+.amazon-navbar,
+.amazon-navbar .nav-link,
+.amazon-navbar .dropdown-toggle,
+.amazon-navbar .navbar-brand,
+.amazon-navbar .account-line1,
+.amazon-navbar .account-line2,
+.amazon-navbar .returns-line1,
+.amazon-navbar .returns-line2,
+.amazon-navbar .cart-text,
+.amazon-navbar .delivery-text,
+.amazon-navbar .location-text,
+.secondary-navbar,
+.secondary-navbar .nav-link {
+    color: white !important; /* Only affects text color */
+}
+
+/* Hover states keep existing background colors */
+.amazon-navbar .nav-link:hover,
+.amazon-navbar .dropdown-toggle:hover,
+.secondary-navbar .nav-link:hover {
+    color: #febd69 !important; /* Amazon's hover color */
+    background-color: transparent !important; /* Preserve navbar background */
+}
+
+/* Specific element adjustments */
 .amazon-navbar {
-    background-color: var(--amazon-primary) !important;
-    height: 60px;
-    padding: 0;
+    background-color: var(--amazon-primary) !important; /* Maintain dark navbar */
 }
 
-.amazon-logo img {
-    height: 30px;
-    padding: 10px 0;
-    margin-left: 10px;
+.secondary-navbar {
+    background-color: var(--amazon-secondary) !important; /* Maintain secondary navbar */
 }
 
+/* Cart count stays orange */
+.cart-count {
+    color: var(--amazon-orange) !important;
+}
+
+/* Search button keeps its styling */
+.search-button {
+    background-color: var(--amazon-orange);
+    color: #111 !important; /* Button text stays dark */
+}
+
+/* Secondary Navbar Links */
+.secondary-navbar .nav-link {
+    color: var(--amazon-white) !important;
+    font-weight: 500;
+}
+
+.secondary-navbar .nav-link:hover {
+    border: 1px solid var(--amazon-white);
+}
+
+/* Dropdown Menus */
+.dropdown-menu {
+    background-color: var(--amazon-white);
+    border: 1px solid var(--amazon-light-gray);
+}
+
+.dropdown-item {
+    color: var(--amazon-primary) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--amazon-light-gray);
+    color: var(--amazon-primary) !important;
+}
+
+/* Delivery Location */
 .delivery-location {
-    color: white;
-    padding: 10px;
-    cursor: pointer;
+    color: var(--amazon-white);
 }
 
 .delivery-location:hover {
-    border: 1px solid white;
+    border: 1px solid var(--amazon-white);
 }
+
+
 
 .delivery-text {
     font-size: 12px;
@@ -408,4 +480,242 @@ main {
     background-color: var(--amazon-orange);
 }
 
-/* Responsive styles in responsive.css */
+
+/* Profile Page Styles */
+.profile-card {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.profile-header {
+    background-color: var(--amazon-primary);
+    color: white;
+    padding: 20px;
+}
+
+.profile-body {
+    padding: 20px;
+    background-color: white;
+}
+
+.profile-form legend {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--amazon-primary);
+}
+
+/* Make form inputs match Amazon style */
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #a6a6a6;
+}
+
+.form-control:focus {
+    border-color: var(--amazon-orange);
+    box-shadow: 0 0 0 0.25rem rgba(254,189,105,.25);
+}
+
+
+/* Amazon Color Variables */
+:root {
+    --amazon-primary: #131921;
+    --amazon-secondary: #232f3e;
+    --amazon-yellow: #febd69;
+    --amazon-orange: #f3a847;
+    --amazon-link: #0066c0;
+}
+
+/* Auth Card Styling */
+.card {
+    border-radius: 4px;
+}
+
+.bg-amazon-primary {
+    background-color: var(--amazon-primary);
+}
+
+.text-amazon-link {
+    color: var(--amazon-link);
+}
+
+/* Button Styling */
+.btn-amazon-warning {
+    background-color: var(--amazon-yellow);
+    color: #111;
+    border-color: #a88734 #9c7e31 #846a29;
+}
+
+.btn-amazon-warning:hover {
+    background-color: var(--amazon-orange);
+}
+
+.btn-outline-amazon-secondary {
+    border-color: #adb1b8 #a2a6ac #8d9096;
+    color: #111;
+}
+
+.btn-outline-amazon-secondary:hover {
+    background-color: #f7fafa;
+    border-color: #a2a6ac #979aa1 #82858a;
+}
+
+/* Form Styling */
+.form-control:focus {
+    border-color: #e77600;
+    box-shadow: 0 0 3px 2px rgba(228,121,17,.5);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .card {
+        border: none !important;
+    }
+}
+/* Orders Page Specific Styles */
+.bg-amazon-primary {
+    background-color: #131921;
+}
+
+.btn-amazon-warning {
+    background-color: #febd69;
+    color: #111;
+    border-color: #a88734 #9c7e31 #846a29;
+}
+
+.btn-amazon-warning:hover {
+    background-color: #f3a847;
+}
+
+.order-card {
+    transition: all 0.3s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* Status Badges */
+.badge.bg-success {
+    background-color: #067d62 !important;
+}
+
+.badge.bg-primary {
+    background-color: #0066c0 !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .order-item-image {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+    .order-meta {
+        flex-direction: column;
+    }
+    
+    .order-meta div {
+        margin-bottom: 5px;
+    }
+}
+
+
+.home-section {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.hero-banner {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.hero-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 2rem;
+}
+
+.category-card, .brand-card {
+    text-align: center;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover, .brand-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.deal-card {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.deal-card h3 {
+    color: #e63946;
+    font-weight: bold;
+}
+
+
+/* Adjust banner container */
+.banner-slider {
+    aspect-ratio: 16/9;  /* Standard widescreen ratio */
+    width: 100%;
+    overflow: hidden;
+}
+
+.banner-slider .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+    .banner-slider {
+        max-height: 250px;
+    }
+    .banner-slider .carousel-item img {
+        max-height: 250px;
+    }
+}
+
+
+.category-card:hover {
+    transform: translateY(-5px);
+    background-color: #2a2a2a;
+}
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+}
+.pagination .page-link {
+    color: #007bff;
+}

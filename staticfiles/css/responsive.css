@@ -58,3 +58,27 @@
         display: none;
     }
 }
+/* Banner Slider Responsive Styles */
+@media (max-width: 992px) {
+    .slider img {
+        height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .slider img {
+        height: 200px;
+    }
+    
+    .slider-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .slider img {
+        height: 150px;
+    }
+}
