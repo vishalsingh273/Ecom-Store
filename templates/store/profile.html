@@ -1,5 +1,5 @@
 {% extends 'store/base.html' %}
-{% load crispy_forms_tags %}
+{% comment %} {% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container mt-4">
@@ -26,6 +26,55 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% endcomment %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="d-flex align-items-center mb-4">
+                <i class="fas fa-user-circle fa-3x text-primary me-3"></i>
+                <h3 class="mb-0">Your Profile</h3>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3 text-muted fw-semibold">
+                                <i class="fas fa-user me-2"></i>User Information
+                            </h5>
+                            {{ user_form|crispy }}
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3 text-muted fw-semibold">
+                                <i class="fas fa-address-card me-2"></i>Customer Details
+                            </h5>
+                            {{ customer_form|crispy }}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-warning px-4" type="submit">
+                                <i class="fas fa-save me-1"></i> Update
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">
+                                <i class="fas fa-arrow-left me-1"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-end mt-3">
+                <small class="text-muted">Last updated: {{ customer_form.instance.updated_at|default:"Just now" }}</small>
             </div>
         </div>
     </div>

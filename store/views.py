@@ -19,14 +19,14 @@ def home(request):
     paginator = Paginator(product_list, 20)
     page_number = request.GET.get('page')
     products = paginator.get_page(page_number)
-    featured_categories = Category.objects.all()[:4]
+    # featured_categories = Category.objects.all()[:4]
     all_categories = Category.objects.all()
 
     context = {
         'featured_banners': featured_banners,
         'sections': active_sections,
         'products': products,
-        'featured_categories': featured_categories,
+        # 'featured_categories': featured_categories,
         'categories': all_categories,
     }
     return render(request, 'store/home.html', context)

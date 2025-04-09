@@ -1,5 +1,5 @@
 {% extends 'store/base.html' %}
-{% load static %}
+{% comment %} {% load static %}
 
 {% block content %}
 <div class="container my-5">
@@ -57,6 +57,68 @@
         <h4>Your wishlist is empty</h4>
         <p>Start adding products you love!</p>
         <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} {% endcomment %}
+
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 fw-bold">Your Wishlist</h2>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if wishlist_items %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for item in wishlist_items %}
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <a href="{% url 'product_detail' item.product.id item.product.slug|default:'default-slug' %}" class="text-decoration-none">
+                    <img src="{{ item.product.image.url }}" class="card-img-top p-3" alt="{{ item.product.name }}" style="height: 220px; object-fit: contain;">
+                </a>
+                <div class="card-body">
+                    <h6 class="card-title text-truncate">
+                        <a href="{% url 'product_detail' item.product.id item.product.slug|default:'default-slug' %}" class="text-dark text-decoration-none">
+                            {{ item.product.name }}
+                        </a>
+                    </h6>
+                    <p class="text-primary fw-semibold mb-0">₹{{ item.product.price }}</p>
+                </div>
+                <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+                    <form action="{% url 'remove_from_wishlist' item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash-alt me-1"></i> Remove
+                        </button>
+                    </form>
+                    <form action="{% url 'add_to_cart' item.product.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-warning">
+                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-heart fa-4x text-muted mb-3"></i>
+        <h4>Your wishlist is empty</h4>
+        <p class="text-muted">Start adding products you love and come back anytime.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary btn-lg mt-2">Continue Shopping</a>
     </div>
     {% endif %}
 </div>
