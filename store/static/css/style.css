@@ -719,3 +719,49 @@ main {
 .pagination .page-link {
     color: #007bff;
 }
+
+
+/* Wishlist page styles */
+.wishlist-empty-state {
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.wishlist-empty-state i {
+    opacity: 0.5;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: contain;
+    padding: 10px;
+}
+
+/* Toast notifications */
+.toast {
+    max-width: 350px;
+    overflow: hidden;
+    font-size: 0.875rem;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    opacity: 1;
+    border-radius: 0.25rem;
+}
+
+.toast-header {
+    padding: 0.5rem 0.75rem;
+}
+
+.bg-success {
+    background-color: #28a745!important;
+}
+
+.bg-warning {
+    background-color: #ffc107!important;
+}
+
+.bg-danger {
+    background-color: #dc3545!important;
+}

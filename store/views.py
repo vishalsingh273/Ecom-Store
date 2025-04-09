@@ -12,22 +12,6 @@ from django.db import IntegrityError, transaction
 from django.core.paginator import Paginator
 
 
-# def home(request):
-#     featured_banners = Banner.objects.filter(is_active=True)[:5]
-#     active_sections = HomePageSection.objects.filter(is_active=True).order_by('order')
-#     featured_products = Product.objects.filter(available=True)[:8]
-#     featured_categories = Category.objects.all()[:4]
-#     all_categories = Category.objects.all() 
-
-#     context = {
-#         'featured_banners': featured_banners,
-#         'sections': active_sections,
-#         'products': featured_products,
-#         'featured_categories': featured_categories,
-#         'categories': all_categories, 
-#     }
-#     return render(request, 'store/home.html', context)
-
 def home(request):
     featured_banners = Banner.objects.filter(is_active=True)[:5]
     active_sections = HomePageSection.objects.filter(is_active=True).order_by('order')
@@ -46,26 +30,6 @@ def home(request):
         'categories': all_categories,
     }
     return render(request, 'store/home.html', context)
-
-# def home(request):
-#     # Get active banners (existing functionality)
-#     featured_banners = Banner.objects.filter(is_active=True)[:5]
-    
-#     # Get active home page sections (new functionality)
-#     active_sections = HomePageSection.objects.filter(is_active=True).order_by('order')
-    
-#     # Get featured products and categories (existing functionality)
-#     featured_products = Product.objects.filter(available=True)[:8]
-#     featured_categories = Category.objects.all()[:4]
-    
-#     context = {
-#         'featured_banners': featured_banners,  # Keep banners
-#         'sections': active_sections,  # Add dynamic sections
-#         'products': featured_products,  # Keep featured products
-#         'featured_categories': featured_categories,  # Keep featured categories
-#     }
-#     return render(request, 'store/home.html', context)
-
 
 
 
@@ -211,35 +175,6 @@ def register(request):
         'customer_form': customer_form,
     })
 
-# def register(request):
-#     if request.method == 'POST':
-#         user_form = UserCreationForm(request.POST)
-#         customer_form = CustomerForm(request.POST)
-        
-#         if user_form.is_valid() and customer_form.is_valid():
-#             # Create User
-#             user = user_form.save()
-            
-#             # Create and link Customer - THIS IS THE CRITICAL FIX
-#             customer = customer_form.save(commit=False)
-#             customer.user = user  # Link to the new user
-#             customer.email = user.email  # Optional: sync email
-#             customer.save()  # This creates the Customer record
-            
-#             # Login and redirect
-#             login(request, user)
-#             messages.success(request, f'Welcome, {user.username}!')
-#             return redirect('home')
-#     else:
-#         user_form = UserCreationForm()
-#         customer_form = CustomerForm()
-    
-#     context = {
-#         'user_form': user_form,
-#         'customer_form': customer_form,
-#     }
-#     return render(request, 'store/register.html', context)
-
 
 def login_view(request):
     if request.method == 'POST':
@@ -328,26 +263,20 @@ def search(request):
 
 @login_required
 def wishlist(request):
-    wishlist_items = Wishlist.objects.filter(user=request.user)
-    context = {
-        'wishlist_items': wishlist_items
-    }
-    return render(request, 'store/wishlist.html', context)
+    wishlist_items = Wishlist.objects.filter(user=request.user).select_related('product')
+    return render(request, 'store/wishlist.html', {'wishlist_items': wishlist_items})
 
-
-@login_required
 def add_to_wishlist(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    Wishlist.objects.get_or_create(user=request.user, product=product)
-    messages.success(request, f"{product.name} added to your wishlist.")
-    return redirect(request.META.get('HTTP_REFERER', 'home'))
-
+    product = Product.objects.get(id=product_id)
+    if request.user.is_authenticated:
+        Wishlist.objects.get_or_create(user=request.user, product=product)
+    return redirect('wishlist') 
 
 @login_required
 def remove_from_wishlist(request, item_id):
     wishlist_item = get_object_or_404(Wishlist, id=item_id, user=request.user)
     wishlist_item.delete()
-    messages.success(request, "Item removed from your wishlist.")
+    messages.success(request, 'Product removed from your wishlist!')
     return redirect('wishlist')
 
 

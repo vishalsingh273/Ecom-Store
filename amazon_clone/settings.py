@@ -28,8 +28,8 @@ SECRET_KEY = 'django-insecure-n277=y4zzaag_qh@8jo1tw@_n_9ld@ybk8s)80ez!+qk+yh#c(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['store.onrender.com']
-
+ALLOWED_HOSTS = []
+# 'store.onrender.com'
 
 # Application definition
 
@@ -67,6 +67,8 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'store.context_processors.categories_processor',
+                'store.context_processors.wishlist_count',
+
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',

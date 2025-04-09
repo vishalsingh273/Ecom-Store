@@ -25,7 +25,7 @@
                     <form action="{% url 'add_to_cart' product.id %}" method="post" class="mb-3">
                         {% csrf_token %}
                         <div class="input-group mb-3" style="width: 150px;">
-                            <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ product.stock }}">
+                            {% comment %} <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ product.stock }}"> {% endcomment %}
                             <button class="btn btn-primary" type="submit">Add to Cart</button>
                         </div>
                     </form>

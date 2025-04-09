@@ -3,6 +3,23 @@
 
 {% block content %}
 
+<!-- Notification Messages -->
+{% if messages %}
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    {% for message in messages %}
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-{{ message.tags }} text-white">
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <!-- Banner Slider -->
 <div class="banner-slider mb-4" style="height: 400px; overflow: hidden;">
     <div id="bannerCarousel" class="carousel slide h-100" data-bs-ride="carousel">
@@ -27,23 +44,207 @@
     </div>
 </div>
 
-<!-- Featured Categories (commented out) -->
-{% comment %}
-<div class="featured-categories mb-5 py-5" style="background-color: #000;">
-    <div class="row justify-content-center">
+<!-- Featured Categories -->
+<div class="featured-categories mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="section-title">Shop by Category</h2>
+        {% comment %} <a href="{% url 'wishlist' %}" class="btn btn-outline-dark">
+            <i class="fas fa-heart"></i> View Wishlist
+        </a> {% endcomment %}
+    </div>
+    <div class="row">
         {% for category in featured_categories %}
-        <div class="col-md-2 col-4 mb-4 text-center">
-            <a href="{% url 'category_products' category.slug %}" style="text-decoration: none;">
-                <div class="mb-2">
-                    <i class="fas fa-box-open fa-3x text-white"></i>
-                </div>
-                <h6 class="text-white">{{ category.name }}</h6>
-            </a>
+        <div class="col-md-2 col-6 mb-3 text-center">
+            <div class="category-card" style="background-color: black; padding: 15px; border-radius: 8px;">
+                <a href="{% url 'category_products' category.slug %}" style="text-decoration: none; color: white;">
+                    {% if category.image %}
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-fluid mb-2" style="height: 80px; object-fit: contain;">
+                    {% else %}
+                    <div class="category-image-placeholder mb-2">
+                        <i class="fas fa-box-open fa-3x" style="color: white;"></i>
+                    </div>
+                    {% endif %}
+                    <h5 style="color: white;">{{ category.name }}</h5>
+                </a>
+            </div>
         </div>
         {% endfor %}
     </div>
 </div>
-{% endcomment %}
+
+<!-- Featured Products -->
+<div class="featured-products mb-5">
+    <h2 class="section-title text-center">Featured Products</h2>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 col-6 mb-3">
+            {% include 'store/product_cart.html' %}
+        </div>
+        {% empty %}
+        <p class="text-center">No products available.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    {% if products.paginator.num_pages > 1 %}
+    <div class="pagination justify-content-center mt-4">
+        <ul class="pagination">
+            {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for num in products.paginator.page_range %}
+            <li class="page-item {% if products.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Dynamic Sections -->
+{% for section in sections %}
+<div class="home-section mb-5">
+    <h2 class="section-title">{{ section.title }}</h2>
+
+    {% if section.section_type == 'hero' %}
+    <div class="hero-banner">
+        {% for content in section.contents.all %}
+        <div class="hero-item mb-4 text-center">
+            {% if content.image %}
+            <img src="{{ content.image.url }}" alt="{{ content.title }}" class="img-fluid mb-2">
+            {% endif %}
+            <h3>{{ content.title }}</h3>
+            <p>{{ content.subtitle }}</p>
+            {% if content.link_url %}
+            <a href="{{ content.link_url }}" class="btn btn-primary">{{ content.link_text }}</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% elif section.section_type == 'category' %}
+    <div class="row">
+        {% for content in section.contents.all %}
+        {% for category in content.categories.all %}
+        <div class="col-md-2 col-6 mb-3 text-center">
+            <div class="category-card" style="background-color: black; padding: 15px; border-radius: 8px;">
+                <a href="{% url 'category_products' category.slug %}" style="text-decoration: none; color: white;">
+                    {% if content.image %}
+                    <img src="{{ content.image.url }}" alt="{{ category.name }}" class="img-fluid mb-2">
+                    {% endif %}
+                    <h5 style="color: white;">{{ category.name }}</h5>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+
+    {% elif section.section_type == 'deal' %}
+    <div class="deal-section">
+        {% for content in section.contents.all %}
+        <div class="deal-card mb-4">
+            <h3>{{ content.title }}</h3>
+            <p>{{ content.subtitle }}</p>
+            <div class="deal-products row">
+                {% for product in content.products.all %}
+                <div class="col-md-3 col-6 mb-3">
+                    {% include 'store/includes/product_card.html' %}
+                </div>
+                {% endfor %}
+            </div>
+            {% if content.link_url %}
+            <a href="{{ content.link_url }}" class="btn btn-outline-primary">{{ content.link_text }}</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% elif section.section_type == 'product_grid' %}
+    {% for content in section.contents.all %}
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>{{ content.title }}</h3>
+            {% if content.link_url %}
+            <a href="{{ content.link_url }}" class="btn btn-link">{{ content.link_text }}</a>
+            {% endif %}
+        </div>
+        <div class="row">
+            {% for product in content.products.all %}
+            <div class="col-md-2 col-6 mb-3">
+                {% include 'store/includes/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    {% elif section.section_type == 'brand_showcase' %}
+    {% for content in section.contents.all %}
+    <h3>{{ content.title }}</h3>
+    <div class="row">
+        {% for product in content.products.all %}
+        <div class="col-md-3 col-6 mb-3 text-center">
+            <div class="brand-card">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-2">
+                <h5>{{ product.name }}</h5>
+                <p class="price">₹{{ product.price }}</p>
+                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary">View</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if content.link_url %}
+    <div class="text-center mt-3">
+        <a href="{{ content.link_url }}" class="btn btn-outline-primary">{{ content.link_text }}</a>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</div>
+{% endfor %}
+
+{% endblock %}
+
+
+{% comment %} {% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Banner Slider -->
+<div class="banner-slider mb-4" style="height: 400px; overflow: hidden;">
+    <div id="bannerCarousel" class="carousel slide h-100" data-bs-ride="carousel">
+        <div class="carousel-inner h-100">
+            {% for banner in featured_banners %}
+            <div class="carousel-item h-100 {% if forloop.first %}active{% endif %}">
+                <a href="{{ banner.link_url }}">
+                    <img src="{{ banner.image.url }}" class="d-block w-100 h-100" alt="{{ banner.title }}"
+                         style="object-fit: cover; object-position: center;">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
 
 <!-- Featured Products -->
 <div class="featured-products mb-5">
@@ -187,4 +388,4 @@
 </div>
 {% endfor %}
 
-{% endblock %}
+{% endblock %} {% endcomment %}
